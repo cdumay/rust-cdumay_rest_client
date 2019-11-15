@@ -1,0 +1,21 @@
+[package]
+name = "cdumay_rest_client"
+version = "0.1.0"
+authors = ["Cédric Dumay <cedric.dumay@gmail.com>"]
+license = "MIT"
+readme = "README.md"
+documentation = "https://docs.rs/cdumay_rest_client"
+repository = "https://github.com/cdumay/rust-cdumay_rest_client"
+homepage =  "https://github.com/cdumay/rust-cdumay_rest_client"
+description = """A library to call remote REST API application"""
+keywords = ["http", "serde", "REST"]
+categories = ["authentication",  "data-structures", "encoding", "parsing", "web-programming::http-client"]
+
+[dependencies]
+cdumay_error = { git = "https://github.com/cdumay/rust-cdumay_errors" }
+cdumay_http_client = { git = "https://github.com/cdumay/rust-cdumay_http_client" }
+cdumay_result = { git = "https://github.com/cdumay/rust-cdumay_result" }
+reqwest = "0.9"
+serde = "1.0"
+serde-value = "0.6"
+serde_json = "1.0"
