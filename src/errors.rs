@@ -1,5 +1,6 @@
 use std::collections::btree_map::BTreeMap;
 use std::error::Error;
+use std::fmt;
 
 use cdumay_error::{ErrorInfo, GenericErrors};
 use cdumay_http_client::ClientError;
@@ -50,5 +51,11 @@ impl ErrorInfo for RestClientError {
             RestClientError::ClientError(err) => err.msgid(),
             RestClientError::SerializationError(_) => GenericErrors::SERIALIZATION_ERROR.msgid()
         }
+    }
+}
+
+impl fmt::Display for RestClientError {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "{}: {}", self.msgid(), self.message())
     }
 }
