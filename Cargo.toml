@@ -1,6 +1,6 @@
 [package]
 name = "cdumay_rest_client"
-version = "0.1.0"
+version = "0.1.1"
 authors = ["Cédric Dumay <cedric.dumay@gmail.com>"]
 license = "MIT"
 readme = "README.md"

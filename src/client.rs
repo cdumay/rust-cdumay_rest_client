@@ -9,16 +9,16 @@ use serde::{Deserialize, Serialize};
 use crate::errors::RestClientError;
 
 #[derive(Debug)]
-pub struct RestClient<A: Authentication> {
+pub struct RestClient {
     url_root: Url,
     timeout: u64,
     headers: HeaderMap,
-    auth: Option<A>,
+    auth: Option<Box<dyn Authentication>>,
 }
 
 
-impl<A: Authentication> ClientBuilder<A> for RestClient<A> {
-    fn new(url_root: &str) -> Result<RestClient<A>, ClientError> {
+impl ClientBuilder for RestClient {
+    fn new(url_root: &str) -> Result<RestClient, ClientError> {
         Ok(RestClient {
             url_root: Url::parse(url_root.trim_end_matches("/"))?,
             timeout: 10,
@@ -35,28 +35,28 @@ impl<A: Authentication> ClientBuilder<A> for RestClient<A> {
             auth: None,
         })
     }
-    fn set_timeout(mut self, timeout: u64) -> RestClient<A> {
+    fn set_timeout(mut self, timeout: u64) -> RestClient {
         self.timeout = timeout;
         self
     }
-    fn set_headers(mut self, headers: HeaderMap) -> RestClient<A> {
+    fn set_headers(mut self, headers: HeaderMap) -> RestClient {
         self.headers.extend(headers);
         self
     }
-    fn set_auth(mut self, auth: A) -> RestClient<A> {
-        self.auth = Some(auth);
+    fn set_auth<A: Authentication + 'static>(mut self, auth: A) -> RestClient {
+        self.auth = Some(Box::new(auth));
         self
     }
 }
 
-impl<A: Authentication> BaseClient<A> for RestClient<A> {
+impl BaseClient for RestClient {
     fn url_root(&self) -> &Url { &self.url_root }
     fn timeout(&self) -> &u64 { &self.timeout }
     fn headers(&self) -> &HeaderMap { &self.headers }
-    fn auth(&self) -> &Option<A> { &self.auth }
+    fn auth(&self) -> Option<&Box<dyn Authentication>> { self.auth.as_ref() }
 }
 
-impl<A: Authentication> RestClient<A> {
+impl RestClient {
     pub fn get<R>(&self, path: String, params: Option<HashMap<String, String>>, headers: Option<HeaderMap>, timeout: Option<u64>) -> Result<R, RestClientError>
         where for<'a> R: Deserialize<'a>
     {
