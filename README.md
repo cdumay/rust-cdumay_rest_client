@@ -1,39 +1,33 @@
-# cdumay_rest_client
+# cdumay_rest_client ![License: BSD-3-Clause](https://img.shields.io/badge/license-BSD--3--Clause-blue) [![cdumay_rest_client on crates.io](https://img.shields.io/crates/v/cdumay_rest_client)](https://crates.io/crates/cdumay_rest_client) [![cdumay_rest_client on docs.rs](https://docs.rs/cdumay_rest_client/badge.svg)](https://docs.rs/cdumay_rest_client) [![Source Code Repository](https://img.shields.io/badge/Code-On%20GitHub-blue?logo=GitHub)](https://github.com/cdumay/rust-cdumay_rest_client)
 
-[![Build Status](https://travis-ci.org/cdumay/rust-cdumay_rest_client.svg?branch=master)](https://travis-ci.org/cdumay/rust-cdumay_rest_client)
-[![Latest version](https://img.shields.io/crates/v/cdumay_rest_client.svg)](https://crates.io/crates/cdumay_rest_client)
-[![Documentation](https://docs.rs/cdumay_rest_client/badge.svg)](https://docs.rs/cdumay_rest_client)
-![License](https://img.shields.io/crates/l/cdumay_rest_client.svg)
+cdumay_rest_client is a basic REST library used to standardize result and serialize them using [serde][__link0].
 
-cdumay_rest_client is a basic REST library used to standardize result and serialize them using [serde](https://docs.serde.rs/serde/).
+### Quickstart
 
-## Quickstart
+*Cargo.toml*:
 
-_Cargo.toml_:
 ```toml
 [dependencies]
-serde = "1.0"
-serde_derive = "1.0"
+serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
-cdumay_error = "0.1"
-cdumay_http_client = "0.1"
-cdumay_rest_client = "0.1"
+cdumay_error = "0.3"
+cdumay_http_client = "0.3"
+cdumay_rest_client = "0.3"
 ```
 
-_main.rs_:
+*main.rs*:
 
 ```rust
 extern crate cdumay_error;
 extern crate cdumay_http_client;
 extern crate cdumay_rest_client;
-#[macro_use]
-extern crate serde_derive;
 extern crate serde_json;
 
-use cdumay_error::ErrorRepr;
+use cdumay_error::JsonError;
 use cdumay_http_client::{ClientBuilder, HttpClient};
 use cdumay_http_client::authentication::NoAuth;
 use cdumay_rest_client::RestClient;
+use serde::{Serialize, Deserialize};
 
 #[derive(Serialize, Deserialize, Clone, Debug)]
 struct Todo {
@@ -42,25 +36,28 @@ struct Todo {
 }
 
 fn main() {
-    let cli = RestClient::<NoAuth>::new("http://127.0.0.1:5000").unwrap();
-    let result = cli.get::<Todo>("/todos/1".into(), None, None, None);
+    let cli = RestClient::new("http://127.0.0.1:5000").unwrap();
+    let result = cli.get::<Todo>("/todos/1".into(), None, None, None, None);
 
     match result {
         Ok(todo) => println!("{}", serde_json::to_string_pretty(&todo).unwrap()),
-        Err(err) => println!("{}", serde_json::to_string_pretty(&ErrorRepr::from(err)).unwrap()),
+        Err(err) => println!("{}", serde_json::to_string_pretty(&JsonError::from(err)).unwrap()),
     }
 }
 ```
-_Output_:
+
+*Output*:
+
 ```json
 {
   "id": 1,
   "task": "Build an API"
 }
 ```
-## Errors
 
-Errors can be displayed using [cdumay_error](https://docs.serde.rs/cdumay_error/):
+### Errors
+
+Errors can be displayed using [cdumay_error][__link1]:
 
 ```json
 {
@@ -73,9 +70,11 @@ Errors can be displayed using [cdumay_error](https://docs.serde.rs/cdumay_error/
 }
 ```
 
-## Project Links
+### Project Links
 
-- Issues: https://github.com/cdumay/rust-cdumay_rest_client/issues
-- Documentation: https://docs.rs/cdumay_rest_client
+* Issues: https://github.com/cdumay/rust-cdumay_rest_client/issues
+* Documentation: https://docs.rs/cdumay_rest_client
 
-License: MIT
+
+ [__link0]: https://docs.serde.rs/serde/
+ [__link1]: https://docs.serde.rs/cdumay_error/
