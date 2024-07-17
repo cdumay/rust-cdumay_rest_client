@@ -19,8 +19,9 @@ travis-ci = { repository = "cdumay/rust-cdumay_http_client" }
 maintenance = { status = "as-is" }
 
 [dependencies]
-cdumay_error = "0.3.0"
-cdumay_http_client = "0.3.2"
+cdumay_core = { git = "https://github.com/cdumay/rust-cdumay_core" }
+cdumay_error = { git = "https://github.com/cdumay/rust-cdumay_error" }
+cdumay_http_client = { git = "https://github.com/cdumay/rust-cdumay_http_client" }
 reqwest = { version = "0.12.5", features = ["json", "blocking"] }
 serde = { version = "1.0.203", features = ["derive"] }
 serde_json = "1.0.117"

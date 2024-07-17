@@ -7,7 +7,7 @@ use cdumay_http_client::authentication::Authentication;
 use reqwest::{Method, Url};
 use reqwest::header::{ACCEPT, CONTENT_TYPE, HeaderMap, HeaderValue, USER_AGENT};
 use serde::{Deserialize, Serialize};
-use serde_json::Value;
+use cdumay_core::Value;
 
 #[derive(Debug)]
 pub struct RestClient {
